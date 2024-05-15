@@ -1,0 +1,326 @@
+CREATE OR REPLACE PROCEDURE update_patient_email(
+    p_patient_id IN INT,
+    p_new_email IN VARCHAR2
+) IS
+    CURSOR cur_patient IS
+        SELECT patient_id
+        FROM ZZ_Patients
+        WHERE patient_id = p_patient_id;
+BEGIN
+    FOR rec_patient IN cur_patient LOOP
+        UPDATE ZZ_Patients
+        SET email = p_new_email
+        WHERE patient_id = rec_patient.patient_id;
+        DBMS_OUTPUT.PUT_LINE('Test for Procedure1');
+        DBMS_OUTPUT.PUT_LINE('Email updated successfully for patient ' || rec_patient.patient_id);
+        DBMS_OUTPUT.PUT_LINE('');
+    END LOOP;
+    
+    COMMIT;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Patient with ID ' || p_patient_id || ' not found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+END;
+/
+
+CREATE OR REPLACE PROCEDURE retrieve_patient_information(p_patient_id IN ZZ_Patients.patient_id%TYPE) IS
+    CURSOR cur_patients IS
+        SELECT *
+        FROM ZZ_Patients WHERE patient_id = p_patient_id;
+BEGIN
+
+    DBMS_OUTPUT.PUT_LINE('Test for Procedure2');
+    DBMS_OUTPUT.PUT_LINE('Patient Information:');
+    FOR rec_patient IN cur_patients LOOP
+        DBMS_OUTPUT.PUT_LINE('ID: ' || rec_patient.patient_id ||
+                             ', NAME: ' || rec_patient.name ||
+                             ', EMAIL: ' || rec_patient.email ||
+                             ', DOB: ' || rec_patient.dob ||
+                             ', GENDER: ' || rec_patient.gender ||
+                             ', ADDRESS: ' || rec_patient.address ||
+                             ', PHONE: ' || rec_patient.phone_number ||
+                             ', INSURANCE: ' || rec_patient.insurance_info);
+    END LOOP;
+            DBMS_OUTPUT.PUT_LINE('');
+    EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Patient with ID ' || p_patient_id || ' not found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+END;
+/
+
+CREATE OR REPLACE FUNCTION get_medical_record_count(
+    p_patient_id IN INT
+) RETURN INT IS
+    v_record_count INT := 0;
+BEGIN
+    SELECT COUNT(*)
+    INTO v_record_count
+    FROM ZZ_Medical_Record
+    WHERE patient_id = p_patient_id;
+    
+    RETURN v_record_count;
+EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No medical records found for patient with ID ' || p_patient_id);
+                DBMS_OUTPUT.PUT_LINE('');
+        RETURN 0;
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+        RETURN -1; -- Return -1 to indicate an error
+END;
+/
+
+CREATE OR REPLACE FUNCTION get_total_billing_amount(
+    p_patient_id IN INT
+) RETURN INT IS
+    v_total_amount INT := 0;
+BEGIN
+    SELECT SUM(amount) INTO v_total_amount
+    FROM ZZ_Billing
+    WHERE patient_id = p_patient_id;
+    
+    RETURN v_total_amount;
+    EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Patient with ID ' || p_patient_id || ' not found.');
+        DBMS_OUTPUT.PUT_LINE('');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+END;
+/
+
+
+DECLARE
+    v_total_billing_amount INT;
+    v_patient_id NUMBER(3) := 501;
+    v_record_count INT;
+BEGIN
+    v_record_count := get_medical_record_count(v_patient_id);
+    DBMS_OUTPUT.PUT_LINE('Test for Function1');
+    DBMS_OUTPUT.PUT_LINE('Record Count: ' || v_record_count);
+     DBMS_OUTPUT.PUT_LINE('');
+    
+    update_patient_email(501, 'john.doe@example.com');
+    
+    v_total_billing_amount := get_total_billing_amount(501);
+    DBMS_OUTPUT.PUT_LINE('Test for Function2');
+    DBMS_OUTPUT.PUT_LINE('Total Billing Amount for Patient 501: ' || v_total_billing_amount);
+     DBMS_OUTPUT.PUT_LINE('');
+    
+
+    
+    retrieve_patient_information(v_patient_id);
+END;
+
+
+/
+
+Create or replace package health_pkg
+    is
+    clinicID Constant Number :=100001;
+    
+    Procedure update_patient_email(
+    p_patient_id IN INT,
+    p_new_email IN VARCHAR2
+    );
+    
+    Procedure retrieve_patient_information
+    (p_patient_id IN ZZ_Patients.patient_id%TYPE);
+    
+    FUNCTION get_medical_record_count(
+    p_patient_id IN INT) RETURN INT;
+    
+    FUNCTION get_total_billing_amount(
+    p_patient_id IN INT) RETURN INT;
+    
+end;
+
+/
+
+
+
+Create or replace package body health_pkg
+    is
+    
+    PROCEDURE update_patient_email(
+    p_patient_id IN INT,
+    p_new_email IN VARCHAR2)
+    IS
+    CURSOR cur_patient IS
+        SELECT patient_id
+        FROM ZZ_Patients
+        WHERE patient_id = p_patient_id;
+    BEGIN
+    FOR rec_patient IN cur_patient LOOP
+        UPDATE ZZ_Patients
+        SET email = p_new_email
+        WHERE patient_id = rec_patient.patient_id;
+        
+        DBMS_OUTPUT.PUT_LINE('Email updated successfully for patient ' || rec_patient.patient_id);
+    END LOOP;
+    
+    COMMIT;
+    EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Patient with ID ' || p_patient_id || ' not found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+    END update_patient_email;
+    
+    PROCEDURE retrieve_patient_information(p_patient_id IN ZZ_Patients.patient_id%TYPE) IS
+    CURSOR cur_patients IS
+        SELECT *
+        FROM ZZ_Patients WHERE patient_id = p_patient_id;
+    BEGIN
+    FOR rec_patient IN cur_patients LOOP
+        DBMS_OUTPUT.PUT_LINE('ID: ' || rec_patient.patient_id ||
+                             ', NAME: ' || rec_patient.name ||
+                             ', EMAIL: ' || rec_patient.email ||
+                             ', DOB: ' || rec_patient.dob ||
+                             ', GENDER: ' || rec_patient.gender ||
+                             ', ADDRESS: ' || rec_patient.address ||
+                             ', PHONE: ' || rec_patient.phone_number ||
+                             ', INSURANCE: ' || rec_patient.insurance_info);
+    END LOOP;
+    EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Patient with ID ' || p_patient_id || ' not found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+    END retrieve_patient_information;
+    
+    FUNCTION get_medical_record_count(
+    p_patient_id IN INT) RETURN INT IS
+    v_record_count INT := 0;
+    BEGIN
+    SELECT COUNT(*)
+    INTO v_record_count
+    FROM ZZ_Medical_Record
+    WHERE patient_id = p_patient_id;
+    
+    RETURN v_record_count;
+    EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('No medical records found for patient with ID ' || p_patient_id);
+        RETURN 0;
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+        RETURN -1; -- Return -1 to indicate an error
+    END get_medical_record_count;
+
+
+    FUNCTION get_total_billing_amount(
+    p_patient_id IN INT
+    ) RETURN INT IS
+    v_total_amount INT := 0;
+    BEGIN
+    SELECT SUM(amount) INTO v_total_amount
+    FROM ZZ_Billing
+    WHERE patient_id = p_patient_id;
+    
+    RETURN v_total_amount;
+    EXCEPTION
+    WHEN NO_DATA_FOUND THEN
+        DBMS_OUTPUT.PUT_LINE('Patient with ID ' || p_patient_id || ' not found.');
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Error occurred: ' || SQLERRM);
+    END get_total_billing_amount;
+
+end;
+
+
+/
+
+--TEST SCRIPT FOR PACKAGE
+
+DECLARE
+    v_total_billing_amount INT;
+    v_patient_id NUMBER(3) := 501;
+    v_record_count INT;
+BEGIN
+    DBMS_OUTPUT.PUT_LINE('Test for package');
+    v_record_count := health_pkg.get_medical_record_count(v_patient_id);
+    DBMS_OUTPUT.PUT_LINE('Record Count: ' || v_record_count);
+    
+    health_pkg.update_patient_email(501, 'john.doe@example.com');
+    
+    v_total_billing_amount := health_pkg.get_total_billing_amount(501);
+    DBMS_OUTPUT.PUT_LINE('Total Billing Amount for Patient 501: ' || v_total_billing_amount);
+    
+    DBMS_OUTPUT.PUT_LINE('Patient Information:');
+    health_pkg.retrieve_patient_information(v_patient_id);
+END;
+
+
+/
+
+Declare
+v_id number;
+begin
+ DBMS_output.put_line('Test for package global variable');
+ v_id := health_pkg.clinicID;
+  DBMS_output.put_line('Clinic ID: '|| v_id);
+
+
+end;
+/
+
+--Trigger 1 (create a billing record for new patients)
+
+CREATE OR REPLACE TRIGGER ZZ_BILLING_TRG
+AFTER INSERT ON ZZ_PATIENTS
+FOR EACH ROW
+
+
+BEGIN
+    INSERT INTO ZZ_BILLING (billing_id, patient_id, amount, billing_date, payment_status)
+    VALUES (SEQ_BILLING_ID.NEXTVAL, :NEW.patient_id, 100, SYSDATE, 'Unpaid');
+    DBMS_output.put_line('Test for trigger1');
+    DBMS_output.put_line('New billing record updated');
+    DBMS_output.put_line('Billing ID: ' || seq_billing_id.nextval);
+    DBMS_output.put_line('Patient ID: ' || :NEW.Patient_id);
+    DBMS_output.put_line('Amount (minimum): 100');
+    DBMS_output.put_line('Billing_Date: ' || SYSDATE);
+    DBMS_output.put_line('Status: Unpaid');
+    
+    
+END;
+    
+    
+/
+
+insert into zz_patients
+values(seq_patient_id.nextval,'Juan Dela Cruz',TO_DATE('1991-05-01', 'YYYY-MM-DD'),'M','85 Electric St',4372986725,'ReliableHealth','juan.delacruz@email.com');
+
+--rollback
+
+--trigger 2 updating with referential constraints
+
+Create or replace trigger ZZ_staffidchg_trg
+before update of staff_id on zz_medical_staff
+for each row
+
+begin
+    update zz_medical_record
+    set staff_id = :New.staff_id
+    where staff_id = :old.staff_id;
+    DBMS_output.put_line('Test for trigger2');
+    DBMS_output.put_line('Staff ID changed');
+    
+end;
+
+/
+
+update zz_medical_staff
+    set staff_id = 2001
+    where staff_id = 1001;
+    
+--rollback
+
+
+/
+

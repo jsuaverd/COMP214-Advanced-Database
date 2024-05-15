@@ -1,0 +1,250 @@
+DATABASE PROJECT SCRIPT;
+
+DROP TABLE ZZ_Patients CASCADE CONSTRAINTS;
+DROP TABLE ZZ_Medical_staff CASCADE CONSTRAINTS;
+DROP TABLE ZZ_Medical_record CASCADE CONSTRAINTS;
+DROP TABLE ZZ_billing CASCADE CONSTRAINTS;
+DROP TABLE ZZ_treatment CASCADE CONSTRAINTS;
+DROP Sequence seq_patient_id;
+DROP Sequence seq_billing_id;
+
+
+
+CREATE TABLE zz_Patients (
+    patient_id INT PRIMARY KEY NOT NULL,
+    name VARCHAR2(100) NOT NULL,
+    dob DATE NOT NULL,
+    gender CHAR(1),
+    address VARCHAR2(100),
+    phone_number VARCHAR2(20),
+    insurance_info VARCHAR2(50),
+    email VARCHAR2(100)
+);
+
+CREATE TABLE zz_medical_staff (
+    staff_id INT PRIMARY KEY NOT NULL,
+    name VARCHAR2(100) NOT NULL,
+    specialization VARCHAR2(100) NOT NULL,
+    patient_id INT NOT NULL,
+    schedule VARCHAR2(100),
+    gender CHAR(1),
+    FOREIGN KEY (patient_id) REFERENCES zz_Patients(patient_id)
+);
+
+CREATE TABLE zz_medical_record (
+    record_id INT PRIMARY KEY NOT NULL,
+    patient_id INT NOT NULL,
+    staff_id INT NOT NULL,
+    diagnosis VARCHAR2(100),
+    treatment VARCHAR2(100),
+    blood_type CHAR(3) NOT NULL,
+    FOREIGN KEY (patient_id) REFERENCES zz_Patients(patient_id),
+    FOREIGN KEY (staff_id) REFERENCES zz_medical_staff(staff_id)
+);
+
+
+CREATE TABLE  zz_billing (
+    billing_id INT PRIMARY KEY NOT NULL,
+    patient_id INT NOT NULL, 
+    amount INT NOT NULL,
+    billing_date DATE NOT NULL,
+    payment_status VARCHAR2 (20) NOT NULL
+);
+
+CREATE TABLE zz_treatment (
+    treatment_id INT PRIMARY KEY NOT NULL,
+    record_id INT NOT NULL,
+    patient_id INT NOT NULL,
+    medicine_name VARCHAR2(100) NOT NULL,
+    dosage VARCHAR2(100),
+    start_date DATE, 
+    end_date DATE, 
+    FOREIGN KEY (record_id) REFERENCES zz_medical_record(record_id), 
+    FOREIGN KEY (patient_id) REFERENCES zz_Patients(patient_id)
+);
+
+COMMIT;
+
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(501, 'John Doe', TO_DATE('1990-01-01', 'YYYY-MM-DD'), 'M', '123 Baker St', '1234567890', 'HealthCare Inc.', 'john.doe@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(502, 'Jane Smith', TO_DATE('1985-05-15', 'YYYY-MM-DD'), 'F', '456 Elm St', '2345678901', 'Wellness Corp.', 'jane.smith@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(503, 'Sam Wilson', TO_DATE('1978-09-22', 'YYYY-MM-DD'), 'M', '789 Pine St', '3456789012', 'MediCover Ltd.', 'sam.wilson@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(504, 'Alice Johnson', TO_DATE('1992-07-04', 'YYYY-MM-DD'), 'F', '1012 Maple St', '4567890123', 'InsureHealth', 'alice.johnson@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(505, 'Bob White', TO_DATE('1980-12-12', 'YYYY-MM-DD'), 'M', '321 Oak St', '5678901234', 'FamilyCare', 'bob.white@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(506, 'Sara Parker', TO_DATE('1975-03-29', 'YYYY-MM-DD'), 'F', '654 Willow St', '6789012345', 'GlobalHealth', 'sara.parker@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(507, 'Mike Brown', TO_DATE('1988-08-16', 'YYYY-MM-DD'), 'M', '987 Cedar St', '7890123456', 'SecureLife', 'mike.brown@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(508, 'Linda Green', TO_DATE('1993-11-21', 'YYYY-MM-DD'), 'F', '213 Spruce St', '8901234567', 'HealthNet', 'linda.green@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(509, 'Tom Clark', TO_DATE('1984-02-09', 'YYYY-MM-DD'), 'M', '428 Birch St', '9012345678', 'PrimeCare', 'tom.clark@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(510, 'Nancy Adams', TO_DATE('1995-05-05', 'YYYY-MM-DD'), 'F', '567 Palm St', '0123456789', 'TrustMed', 'nancy.adams@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(511, 'Carl Jenkins', TO_DATE('1990-10-10', 'YYYY-MM-DD'), 'M', '678 Linden St', '1234509876', 'CarePlus', 'carl.jenkins@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(512, 'Laura Scott', TO_DATE('1986-04-20', 'YYYY-MM-DD'), 'F', '789 Magnolia St', '2345609876', 'HealthFirst', 'laura.scott@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(513, 'Josh Carter', TO_DATE('1979-01-30', 'YYYY-MM-DD'), 'M', '890 Pineapple St', '3456709876', 'WellFare', 'josh.carter@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(514, 'Emily Turner', TO_DATE('1994-09-15', 'YYYY-MM-DD'), 'F', '123 Peachtree St', '4567809876', 'MediAssist', 'emily.turner@email.com');
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) VALUES
+(515, 'David Wright', TO_DATE('1982-07-07', 'YYYY-MM-DD'), 'M', '456 Cherry St', '5678909876', 'SureHealth', 'david.wright@email.com');
+
+
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1001, 'Dr. Emily Stone', 'Cardiology', 501, 'Monday to Friday 9AM to 5PM', 'F');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1002, 'Dr. Michael Brown', 'Dermatology', 502, 'Monday to Friday 10AM to 6PM', 'M');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1003, 'Dr. Rachel Green', 'General Medicine', 503, 'Monday to Friday 8AM to 4PM', 'F');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1004, 'Dr. Lucas Grey', 'Pediatrics', 504, 'Monday to Friday 9AM to 5PM', 'M');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1005, 'Dr. Olivia Harris', 'Neurology', 505, 'Monday to Friday 10AM to 6PM', 'F');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1006, 'Dr. Ethan Johnson', 'Orthopedics', 506, 'Monday to Friday 8AM to 4PM', 'M');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1007, 'Dr. Ava Smith', 'General Surgery', 507, 'Monday to Friday 9AM to 5PM', 'F');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1008, 'Dr. James Wilson', 'Psychiatry', 508, 'Monday to Friday 10AM to 6PM', 'M');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1009, 'Dr. Amelia Brown', 'Oncology', 509, 'Monday to Friday 8AM to 4PM', 'F');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1010, 'Dr. William Davis', 'Radiology', 510, 'Monday to Friday 9AM to 5PM', 'M');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1011, 'Dr. Mia Miller', 'Endocrinology', 511, 'Monday to Friday 10AM to 6PM', 'F');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1012, 'Dr. Noah Taylor', 'Gastroenterology', 512, 'Monday to Friday 8AM to 4PM', 'M');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1013, 'Dr. Isabella Thomas', 'Nephrology', 513, 'Monday to Friday 9AM to 5PM', 'F');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1014, 'Dr. Jacob White', 'Urology', 514, 'Monday to Friday 10AM to 6PM', 'M');
+INSERT INTO zz_medical_staff (staff_id, name, specialization, patient_id, schedule, gender) VALUES
+(1015, 'Dr. Sophia Hall', 'Pulmonology', 515, 'Monday to Friday 8AM to 4PM', 'F');
+
+
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(201, 501, 1001, 'Hypertension', 'Medication', 'A+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(202, 502, 1002, 'Eczema', 'Topical Creams', 'O-');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(203, 503, 1003, 'Flu', 'Rest and medication', 'B+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(204, 504, 1004, 'Asthma', 'Inhalers and medication', 'A-');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(205, 505, 1005, 'Migraine', 'Medication and therapy', 'AB+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(206, 506, 1006, 'Fracture', 'Cast and physiotherapy', 'O+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(207, 507, 1007, 'Appendicitis', 'Surgery', 'A+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(208, 508, 1008, 'Depression', 'Counseling and medication', 'B-');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(209, 509, 1009, 'Cancer', 'Chemotherapy', 'AB-');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(210, 510, 1010, 'X-ray', 'Radiographic examination', 'O+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(211, 511, 1011, 'Diabetes', 'Insulin and diet control', 'A-');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(212, 512, 1012, 'Acid Reflux', 'Medication and lifestyle changes', 'B+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(213, 513, 1013, 'Kidney Stones', 'Medication and possible surgery', 'O-');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(214, 514, 1014, 'Urinary Tract Infection', 'Antibiotics', 'AB+');
+INSERT INTO zz_medical_record (record_id, patient_id, staff_id, diagnosis, treatment, blood_type) VALUES
+(215, 515, 1015, 'Pneumonia', 'Antibiotics and rest', 'A+');
+
+
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(301, 501, 200, TO_DATE('2024-03-01', 'YYYY-MM-DD'), 'Paid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(302, 502, 150, TO_DATE('2024-03-02', 'YYYY-MM-DD'), 'Unpaid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(303, 503, 100, TO_DATE('2024-03-03', 'YYYY-MM-DD'), 'Paid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(304, 504, 250, TO_DATE('2024-03-04', 'YYYY-MM-DD'), 'Unpaid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(305, 505, 300, TO_DATE('2024-03-05', 'YYYY-MM-DD'), 'Paid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(306, 506, 400, TO_DATE('2024-03-06', 'YYYY-MM-DD'), 'Unpaid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(307, 507, 350, TO_DATE('2024-03-07', 'YYYY-MM-DD'), 'Paid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(308, 508, 180, TO_DATE('2024-03-08', 'YYYY-MM-DD'), 'Unpaid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(309, 509, 500, TO_DATE('2024-03-09', 'YYYY-MM-DD'), 'Paid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(310, 510, 220, TO_DATE('2024-03-10', 'YYYY-MM-DD'), 'Unpaid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(311, 511, 140, TO_DATE('2024-03-11', 'YYYY-MM-DD'), 'Paid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(312, 512, 360, TO_DATE('2024-03-12', 'YYYY-MM-DD'), 'Unpaid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(313, 513, 190, TO_DATE('2024-03-13', 'YYYY-MM-DD'), 'Paid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(314, 514, 500, TO_DATE('2024-03-14', 'YYYY-MM-DD'), 'Unpaid');
+INSERT INTO zz_billing (billing_id, patient_id, amount, billing_date, payment_status) VALUES
+(315, 515, 230, TO_DATE('2024-03-15', 'YYYY-MM-DD'), 'Paid');
+
+
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(401, 201, 501, 'Atenolol', '50mg Daily', TO_DATE('2024-01-01', 'YYYY-MM-DD'), TO_DATE('2024-04-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(402, 202, 502, 'Hydrocortisone', 'Apply twice daily', TO_DATE('2024-02-01', 'YYYY-MM-DD'), TO_DATE('2024-03-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(403, 203, 503, 'Oseltamivir', '75mg Daily', TO_DATE('2024-02-15', 'YYYY-MM-DD'), TO_DATE('2024-02-22', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(404, 204, 504, 'Salbutamol', 'Two puffs as needed', TO_DATE('2024-03-01', 'YYYY-MM-DD'), TO_DATE('2024-06-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(405, 205, 505, 'Sumatriptan', '100mg at migraine onset', TO_DATE('2024-01-10', 'YYYY-MM-DD'), TO_DATE('2024-07-10', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(406, 206, 506, 'Ibuprofen', '400mg every 8 hours as needed', TO_DATE('2024-04-01', 'YYYY-MM-DD'), TO_DATE('2024-04-15', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(407, 207, 507, 'Ceftriaxone', '1g Daily', TO_DATE('2024-03-20', 'YYYY-MM-DD'), TO_DATE('2024-03-27', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(408, 208, 508, 'Sertraline', '50mg Daily', TO_DATE('2024-05-01', 'YYYY-MM-DD'), TO_DATE('2024-11-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(409, 209, 509, 'Doxorubicin', '60mg/m2 every 21 days', TO_DATE('2024-02-01', 'YYYY-MM-DD'), TO_DATE('2024-08-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(410, 210, 510, 'Paracetamol', '500mg every 6 hours as needed', TO_DATE('2024-03-05', 'YYYY-MM-DD'), TO_DATE('2024-03-12', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(411, 211, 511, 'Metformin', '500mg Twice daily', TO_DATE('2024-04-01', 'YYYY-MM-DD'), TO_DATE('2024-10-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(412, 212, 512, 'Omeprazole', '20mg Daily before breakfast', TO_DATE('2024-05-01', 'YYYY-MM-DD'), TO_DATE('2024-08-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(413, 213, 513, 'Tamsulosin', '0.4mg Daily', TO_DATE('2024-06-01', 'YYYY-MM-DD'), TO_DATE('2024-12-01', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(414, 214, 514, 'Nitrofurantoin', '100mg Twice daily', TO_DATE('2024-07-01', 'YYYY-MM-DD'), TO_DATE('2024-07-14', 'YYYY-MM-DD'));
+INSERT INTO zz_treatment (treatment_id, record_id, patient_id, medicine_name, dosage, start_date, end_date) VALUES
+(415, 215, 515, 'Amoxicillin', '500mg Three times daily', TO_DATE('2024-03-10', 'YYYY-MM-DD'), TO_DATE('2024-03-20', 'YYYY-MM-DD'));
+
+
+-- Sequence 
+CREATE SEQUENCE seq_patient_id
+START WITH 1000
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+--Sequence 2
+CREATE SEQUENCE seq_billing_id
+START WITH 5000
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+-- Index on 'zz_Patients' table for NameSearch
+CREATE INDEX idx_patients_name ON zz_Patients(name);
+
+-- Index on 'zz_Medical_record' table for DiagnosisSearch
+CREATE INDEX idx_medical_record_diagnosis ON zz_medical_record(diagnosis);
+
+--Applying the sequence in insert statements
+INSERT INTO zz_Patients (patient_id, name, dob, gender, address, phone_number, insurance_info, email) 
+VALUES (seq_patient_id.NEXTVAL, 'Jane Doe', TO_DATE('1982-04-12', 'YYYY-MM-DD'), 'F', '456 Elm Street', '9876543210', 'GoodHealth Insurance', 'jane.doe@example.com');
