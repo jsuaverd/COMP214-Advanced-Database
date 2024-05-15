@@ -11,11 +11,12 @@ reference: https://blogs.oracle.com/opal/post/how-to-use-python-flask-with-oracl
 
 Here is the screencap of our application: 
 
-![image](https://github.com/jsuaverd/COMP214-Advanced-Database/assets/144153875/178a39a7-a6c5-41f8-aaad-82ab951885cc)
+![image](https://github.com/jsuaverd/COMP214-Advanced-Database/assets/144153875/13d8d7ee-f9d9-4985-8060-c6fa3bc64abd)
 
 
 
-COntributors:
+
+Contributors:
 Anupriya
 Morison,K
 Suaverdez, J
