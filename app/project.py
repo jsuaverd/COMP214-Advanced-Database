@@ -10,7 +10,7 @@ def add_user():
         try:
             # Connect to the database
             dsnStr = cx_Oracle.makedsn("199.212.26.208", "1521", sid="SQLD")
-            conn = cx_Oracle.connect(user="COMP214_W24_zo_26", password="password", dsn=dsnStr)
+            conn = cx_Oracle.connect(user="your-user-name", password="your-password", dsn=dsnStr)
             
             # Insert form data into the database
             cur = conn.cursor()
